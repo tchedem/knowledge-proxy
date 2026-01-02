@@ -7,55 +7,69 @@ GitFlow is a **branching strategy** that organizes work around clear branch role
 ## Main branches
 
 ### `main`
-```bash
-# Think of it like: "Production – what users actually use"
-```
+
 - Always stable
 - Contains released code only
+- Usually associated with version tags (`v1.0.0`, `v1.0.1`, …)
+
+```bash
+# Think of it like: "Production snapshots, each one named"
+```
 
 ### `develop`
 ```bash
-# Think of it like: "Integration branch where features come together"
 ```
 - Latest development state
 - Base branch for new features
+
+- Latest integration state
+- Base branch for all new features
+- Can be unstable
+
+```bash
+# Think of it like: "Integration branch where features come together" or most simply, "The kitchen during service — messy but productive"
+```
 
 ---
 
 ## Feature branches
 
+- Created from: `develop`
+- Merged back into: `develop`
+- Short-lived
+- Naming: `feature/short-description`
+
 ```bash
-# Think of it like: "I work on a new idea without breaking others"
 git checkout -b feature/user-auth develop
 ```
 
-- Created from: `develop`
-- Merged back into: `develop`
-- Naming: `feature/short-description`
-
-Merge example:
 ```bash
-# Think of it like: "I finish my feature and bring it back"
-git checkout develop
-git merge feature/user-auth
-git branch -d feature/user-auth
+# Think of it like: "I borrow tools, build fast, and return them"
 ```
 
 ---
 
 ## Release branches
 
+- Created from: `develop`
+- Used for stabilization, bug fixes, versioning, documentation
+- No new features
+
 ```bash
-# Think of it like: "I prepare the code for production"
 git checkout -b release/1.0.0 develop
 ```
 
-- Used for final testing, version bump, documentation
-- Only bug fixes allowed
+Tagging a release:
+```bash
+git tag -a v1.0.0 -m "Release 1.0.0"
+```
+
+```bash
+# Think of it like: "Final dress rehearsal before the show"
+```
 
 Finish a release:
 ```bash
-# Think of it like: "I officially ship the version"
 git checkout main
 git merge release/1.0.0
 
@@ -69,17 +83,21 @@ git branch -d release/1.0.0
 
 ## Hotfix branches
 
+
+- Created from: `main`
+- Used for critical production issues
+- Must be merged back into `main` and `develop`
+
 ```bash
-# Think of it like: "Production is broken – fix NOW"
 git checkout -b hotfix/1.0.1 main
 ```
 
-- Created from: `main`
-- Used for critical production bugs
+```bash
+# Think of it like: "Emergency room surgery — no redesign, just save the patient"
+```
 
 Finish a hotfix:
 ```bash
-# Think of it like: "I patch production and sync everyone"
 git checkout main
 git merge hotfix/1.0.1
 
@@ -91,44 +109,131 @@ git branch -d hotfix/1.0.1
 
 ---
 
-## Visual summary
+## GitFlow tool (CLI)
 
-```text
-main
-  ↑        ↑
-  |        |
-release   hotfix
-  ↑        ↑
-  └── develop ── feature/*
+GitFlow is available as a command-line helper.
+
+Install:
+```bash
+sudo apt install git-flow
+```
+
+Initialize:
+```bash
+git flow init
+```
+
+Default branches:
+- `main`
+- `develop`
+
+```bash
+# Think of it like: "I define the rules once and follow them"
+```
+
+---
+
+## GitFlow commands
+
+### Feature
+```bash
+git flow feature start user-auth
+git flow feature finish user-auth
+```
+
+```bash
+# Think of it like: "Git opens the branch, closes it, and cleans up"
+```
+
+---
+
+### Release
+```bash
+git flow release start 1.0.0
+git flow release finish 1.0.0
+```
+
+```bash
+# Think of it like: "Guided launch procedure"
+```
+
+---
+
+### Hotfix
+```bash
+git flow hotfix start 1.0.1
+git flow hotfix finish 1.0.1
+```
+
+```bash
+# Think of it like: "Apply the patch everywhere consistently"
+```
+
+---
+
+## Tags
+
+```bash
+git tag -a v1.0.0 -m "Stable release"
+git push origin v1.0.0
+```
+
+```bash
+# Think of it like: "This commit is frozen in time"
+```
+
+
+---
+
+## Tags
+
+```bash
+git tag -a v1.0.0 -m "Stable release"
+git push origin v1.0.0
+```
+
+```bash
+# Think of it like: "This commit is frozen in time"
+```
+
+---
+
+## GitFlow vs Trunk-Based
+
+| GitFlow | Trunk-Based |
+|--------|-------------|
+| Structured | Fast |
+| Versioned releases | Continuous deployment |
+| Multiple branches | Minimal branching |
+| Strong process | Lightweight process |
+
+```bash
+# Think of it like:
+# GitFlow = planned missions
+# Trunk   = constant motion
+```
+
+---
+
+## Mental model
+
+```bash
+main     → stability
+develop  → collaboration
+feature  → experimentation
+release  → preparation
+hotfix   → urgency
 ```
 
 ---
 
 ## When to use GitFlow
 
-```bash
-# Think of it like: "My project is structured, versioned, and long-lived"
-```
+Recommended:
+- Long-lived backend systems
+- Enterprise or regulated environments
+- Versioned APIs
 
-Good fit for:
-- Backend systems
-- Enterprise projects
-- Teams with releases
-
-Not ideal for:
-- Very small projects
-- Continuous deployment without versions
-
----
-
-## GitFlow mindset (important)
-
-```bash
-# Think of it like:
-# main    → stability
-# develop → collaboration
-# feature → creativity
-# release → preparation
-# hotfix  → urgency
-```
-
+Not recommended:
+- Solo projects
+- Rapid continuous deployment setups
