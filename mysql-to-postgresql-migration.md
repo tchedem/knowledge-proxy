@@ -178,3 +178,12 @@ DB_PASSWORD=secret
         'sslmode' => 'prefer',
     ],
 ```
+
+---
+
+Ressources: 
+
+[Converting from other Databases to PostgreSQL](https://wiki.postgresql.org/wiki/Converting_from_other_Databases_to_PostgreSQL)
+
+
+[pgloader](https://pgloader.io/)
